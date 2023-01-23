@@ -1,46 +1,45 @@
 import { Request, Response } from "express";
 import connection from "../database/index.js";
 import { Plate } from "../protocols/Plate.js";
-import platesRepository from "../repositories/plates-repository/index.js";
+import { platesService } from "../services/plates.services.js";
 
-async function getPlatesList(req: Request, res: Response) {
+async function getPlates(req: Request, res: Response) {
   try {
-    const platesList = await platesRepository.readPlates();
+    const platesList = await platesService.getListOfPlates();
 
-    if (platesList.rows.length === 0) {
-      return res.status(404).send("não tem pratos");
+    if (!platesList) {
+      return res.status(404);
     }
 
-    res.status(200).send(platesList.rows);
+    res.status(200).send(platesList);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
   }
 }
 
-async function getPlate(req:Request,res:Response) {
-
-  const {id} = req.params
+async function getPlate(req: Request, res: Response) {
+  const { id } = req.params;
 
   try {
-    const plateConsult = await platesRepository.readPlateById(id);
+    const plate = await platesService.getPlateById(id);
 
-    if (plateConsult.rows.length === 0) {
-      return res.status(404).send("esse prato nao existe");
+    if(!plate){
+      return res.sendStatus(404)
     }
 
-    res.status(200).send(plateConsult.rows);
+    res.status(200).send(plate);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);
   }
 }
 
-async function postPlates(req: Request, res: Response) {
+async function postPlate(req: Request, res: Response) {
   const newPlate = req.body as Plate;
 
   try {
-    await platesRepository.createPlate(newPlate);
+    await platesService.createPlate(newPlate);
 
     res.sendStatus(201);
   } catch (err) {
@@ -50,45 +49,29 @@ async function postPlates(req: Request, res: Response) {
 }
 
 async function updatePlate(req: Request, res: Response) {
-  const {id} = req.params
+  const { id } = req.params;
   const changePlate = req.body as Plate;
 
-  try{
+  try {
+    await platesService.updatePlateById(changePlate, id);
 
-    const plateConsult = await platesRepository.readPlateById(id);
-
-    if(plateConsult.rows.length === 0) {
-      return res.status(404).send("esse prato não existe")
-    }
-
-    await platesRepository.updatePlate(changePlate,id)
-
-    res.status(202).send("alterado")
-
-  }catch(err){
-    console.log(err)
-    res.sendStatus(500)
+    res.status(202).send("alterado");
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
   }
 }
 
 async function deletePlate(req: Request, res: Response) {
-  const {id} = req.params
+  const { id } = req.params;
 
-  try{
-
-    const plateConsult = await platesRepository.readPlateById(id);
-
-    if(plateConsult.rows.length === 0) {
-      return res.status(404).send("esse prato não existe")
-    }
-
-    await platesRepository.deletePlate(id)
-    res.status(200).send("deletado")
-
-  }catch(err){
-    console.log(err)
-    res.sendStatus(500)
+  try {
+    await platesService.deletePlateById(id);
+    res.status(200).send("deletado");
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
   }
 }
 
-export { getPlatesList,getPlate, postPlates, updatePlate, deletePlate };
+export { getPlates, getPlate, postPlate, updatePlate, deletePlate };

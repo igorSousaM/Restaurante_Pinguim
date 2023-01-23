@@ -1,15 +1,19 @@
 import connection from "../../database/index.js";
 import { Plate } from "../../protocols/Plate.js";
 
-function readPlates() {
+function readAll() {
   return connection.query("SELECT * FROM plates;");
 }
 
-function readPlateById(id: string) {
+function readOneById(id: string) {
   return connection.query("SELECT * FROM plates WHERE id=$1;", [id]);
 }
 
-function createPlate(plate: Plate) {
+function readOneByName(name: string){
+  return connection.query("SELECT * FROM plates WHERE name=$1;", [name]);
+}
+
+function create(plate: Plate) {
   const { name, price, description, cookingTime, type } = plate;
 
   return connection.query(
@@ -18,7 +22,7 @@ function createPlate(plate: Plate) {
   );
 }
 
-function updatePlate(plate: Plate,id) {
+function update(plate: Plate,id) {
   const { name, price, description, cookingTime, type } = plate;
 
   return connection.query(
@@ -27,16 +31,17 @@ function updatePlate(plate: Plate,id) {
   );
 }
 
-function deletePlate(id: string){
+function exclude(id: string){
   return connection.query('DELETE FROM plates WHERE id=$1;',[id])
 }
 
 const platesRepository = {
-  readPlates,
-  readPlateById,
-  createPlate,
-  updatePlate,
-  deletePlate
+  readAll,
+  readOneById,
+  readOneByName,
+  create,
+  update,
+  exclude
 };
 
 export default platesRepository;
