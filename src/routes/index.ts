@@ -6,4 +6,4 @@ const router = Router();
 
 router.use(platesRouter)
 
-export { router };
+export default router ;
