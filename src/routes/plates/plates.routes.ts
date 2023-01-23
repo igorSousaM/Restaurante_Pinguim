@@ -17,5 +17,5 @@ platesRouter
   .post("/plates", validateSchema(plateSchema), postPlate)
   .patch("/plates/:id", validateSchema(plateSchema), updatePlate)
   .delete("/plates/:id", deletePlate)
-  .get("/plates/info",getInfo)
+  .get("/info/plates",getInfo)
 export { platesRouter };

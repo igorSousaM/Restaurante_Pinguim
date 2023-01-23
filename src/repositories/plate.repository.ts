@@ -1,21 +1,22 @@
-import connection from "../../database/index.js";
-import { Plate } from "../../protocols/Plate.js";
+import { QueryResult } from "pg";
+import connection from "../database/index.js";
+import {Plate, PlateEntity } from "../protocols/Plate.js";
 
-function readAll() {
+function readAll(): Promise<QueryResult<PlateEntity>> {
   return connection.query("SELECT * FROM plates;");
 }
 
-function readOneById(id: string) {
+function readOneById(id: string): Promise<QueryResult<PlateEntity>> {
   return connection.query("SELECT * FROM plates WHERE id=$1;", [id]);
 }
 
-function readOneByName(name: string) {
+function readOneByName(name: string): Promise<QueryResult<PlateEntity>> {
   return connection.query("SELECT * FROM plates WHERE name=$1;", [name]);
 }
 
-function readInfo() {
+function readInfo():Promise<QueryResult<any>>  {
   return connection.query(
-    'SELECT type, count(type), min("cookingTime"), max("cookingTime") FROM plates GROUP BY type;'
+    'SELECT type, count(type) as quantity, min("cookingTime") as "fatestPlate", max("cookingTime") as "slowerPlate" FROM plates GROUP BY type;'
   );
 }
 

@@ -2,22 +2,22 @@ import { Request, Response } from "express";
 import { Plate } from "../protocols/Plate.js";
 import { platesService } from "../services/plates.services.js";
 
-async function getPlates(req: Request, res: Response) {
+async function getPlates(req: Request, res: Response): Promise<void> {
   try {
     const platesList = await platesService.getListOfPlates();
 
     res.status(200).send(platesList);
   } catch (err) {
     if (err.type === "error_not_found") {
-      return res.sendStatus(404);
+      res.sendStatus(404);
     } else {
       console.log(err);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
   }
 }
 
-async function getPlate(req: Request, res: Response) {
+async function getPlate(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
 
   try {
@@ -26,26 +26,26 @@ async function getPlate(req: Request, res: Response) {
     res.status(200).send(plate);
   } catch (err) {
     if (err.type === "error_not_found") {
-      return res.sendStatus(404);
+      res.sendStatus(404);
     } else {
       console.log(err);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
   }
 }
 
-async function getInfo(req: Request, res: Response) {
+async function getInfo(req: Request, res: Response): Promise<void> {
   try {
     const platesInfo = await platesService.getInfoPlates();
 
-    return res.status(200).send(platesInfo);
+    res.status(200).send(platesInfo);
   } catch (err) {
-    console.log(err)
-    return res.sendStatus(500)
+    console.log(err);
+    res.sendStatus(500);
   }
 }
 
-async function postPlate(req: Request, res: Response) {
+async function postPlate(req: Request, res: Response): Promise<void> {
   const newPlate = req.body as Plate;
 
   try {
@@ -54,15 +54,15 @@ async function postPlate(req: Request, res: Response) {
     res.sendStatus(201);
   } catch (err) {
     if (err.type === "unauthorized_attempt") {
-      return res.sendStatus(409);
+      res.sendStatus(409);
     } else {
       console.log(err);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
   }
 }
 
-async function updatePlate(req: Request, res: Response) {
+async function updatePlate(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
   const changePlate = req.body as Plate;
 
@@ -72,15 +72,15 @@ async function updatePlate(req: Request, res: Response) {
     res.status(202).send("alterado");
   } catch (err) {
     if (err.type === "error_not_found") {
-      return res.sendStatus(404);
+      res.sendStatus(404);
     } else {
       console.log(err);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
   }
 }
 
-async function deletePlate(req: Request, res: Response) {
+async function deletePlate(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
 
   try {
@@ -88,10 +88,10 @@ async function deletePlate(req: Request, res: Response) {
     res.status(200).send("deletado");
   } catch (err) {
     if (err.type === "error_not_found") {
-      return res.sendStatus(404);
+      res.sendStatus(404);
     } else {
       console.log(err);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
   }
 }
