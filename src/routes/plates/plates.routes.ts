@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   deletePlate,
+  getPlate,
   getPlatesList,
   postPlates,
   updatePlate,
@@ -11,6 +12,7 @@ const platesRouter = Router();
 
 platesRouter
   .get("/plates", getPlatesList)
+  .get("/plates/:id",getPlate)
   .post("/plates", validateSchema(plateSchema), postPlates)
   .patch("/plates/:id", validateSchema(plateSchema), updatePlate)
   .delete("/plates/:id", deletePlate);

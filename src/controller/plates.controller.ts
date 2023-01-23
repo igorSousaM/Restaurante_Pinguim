@@ -18,6 +18,24 @@ async function getPlatesList(req: Request, res: Response) {
   }
 }
 
+async function getPlate(req:Request,res:Response) {
+
+  const {id} = req.params
+
+  try {
+    const plateConsult = await platesRepository.readPlateById(id);
+
+    if (plateConsult.rows.length === 0) {
+      return res.status(404).send("esse prato nao existe");
+    }
+
+    res.status(200).send(plateConsult.rows);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+}
+
 async function postPlates(req: Request, res: Response) {
   const newPlate = req.body as Plate;
 
@@ -73,4 +91,4 @@ async function deletePlate(req: Request, res: Response) {
   }
 }
 
-export { getPlatesList, postPlates, updatePlate, deletePlate };
+export { getPlatesList,getPlate, postPlates, updatePlate, deletePlate };
