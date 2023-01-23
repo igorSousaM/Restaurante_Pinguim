@@ -34,7 +34,16 @@ async function getPlate(req: Request, res: Response) {
   }
 }
 
-async function getInfo(req: Request, res: Response) {}
+async function getInfo(req: Request, res: Response) {
+  try {
+    const platesInfo = await platesService.getInfoPlates();
+
+    return res.status(200).send(platesInfo);
+  } catch (err) {
+    console.log(err)
+    return res.sendStatus(500)
+  }
+}
 
 async function postPlate(req: Request, res: Response) {
   const newPlate = req.body as Plate;

@@ -22,6 +22,16 @@ async function getPlateById(id: string) {
   return plateConsult.rows[0];
 }
 
+async function getInfoPlates() {
+  const list = await platesRepository.readInfo()
+
+  if (list.rows.length === 0) {
+    throw notFoundError()
+  }
+  
+  return list.rows
+}
+
 async function createPlate(plate: Plate) {
     
     const plateConsult = await platesRepository.readOneByName(plate.name);
@@ -56,6 +66,7 @@ async function deletePlateById(id:string) {
 export const platesService = {
   getListOfPlates,
   getPlateById,
+  getInfoPlates,
   createPlate,
   updatePlateById,
   deletePlateById

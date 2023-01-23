@@ -9,8 +9,14 @@ function readOneById(id: string) {
   return connection.query("SELECT * FROM plates WHERE id=$1;", [id]);
 }
 
-function readOneByName(name: string){
+function readOneByName(name: string) {
   return connection.query("SELECT * FROM plates WHERE name=$1;", [name]);
+}
+
+function readInfo() {
+  return connection.query(
+    'SELECT type, count(type), min("cookingTime"), max("cookingTime") FROM plates GROUP BY type;'
+  );
 }
 
 function create(plate: Plate) {
@@ -22,26 +28,27 @@ function create(plate: Plate) {
   );
 }
 
-function update(plate: Plate,id) {
+function update(plate: Plate, id: string) {
   const { name, price, description, cookingTime, type } = plate;
 
   return connection.query(
     'UPDATE plates SET name=$1, price=$2, description=$3,"cookingTime"=$4,type=$5 WHERE id=$6;',
-    [name, price, description, cookingTime, type,id]
+    [name, price, description, cookingTime, type, id]
   );
 }
 
-function exclude(id: string){
-  return connection.query('DELETE FROM plates WHERE id=$1;',[id])
+function exclude(id: string) {
+  return connection.query("DELETE FROM plates WHERE id=$1;", [id]);
 }
 
 const platesRepository = {
   readAll,
   readOneById,
   readOneByName,
+  readInfo,
   create,
   update,
-  exclude
+  exclude,
 };
 
 export default platesRepository;
